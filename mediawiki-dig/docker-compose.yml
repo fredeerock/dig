@@ -1,0 +1,44 @@
+version: '3.2'
+services:
+  mariadb:
+    image: 'bitnami/mariadb:latest'
+    environment:
+      # - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_USER=bn_mediawiki
+      - MARIADB_DATABASE=bitnami_mediawiki
+      - MARIADB_ROOT_PASSWORD=your_mariadb_root_password
+      - MARIADB_PASSWORD=your_database_password
+    volumes:
+      - './data/mariadb_data:/bitnami'
+  mediawiki:
+    image: 'bitnami/mediawiki:latest'
+    environment:
+      # - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_HOST=mariadb
+      - MARIADB_PORT_NUMBER=3306
+      - MEDIAWIKI_DATABASE_USER=bn_mediawiki
+      - MEDIAWIKI_DATABASE_NAME=bitnami_mediawiki
+      - MEDIAWIKI_WIKI_NAME=Bitnami MediaWiki
+      - MEDIAWIKI_USERNAME=user
+      - MEDIAWIKI_PASSWORD=bitnami1
+      - MEDIAWIKI_EMAIL=user@example.com
+      - MEDIAWIKI_DATABASE_PASSWORD=your_database_password
+      - SMTP_HOST=ssl://smtp.gmail.com
+      - SMTP_HOST_ID=mydomain.com
+      - SMTP_PORT=465
+      - SMTP_USER=your_email@gmail.com
+      - SMTP_PASSWORD=your_password
+    # ports: #comment this section out when using with nginx-docker-proxy
+    #   - '80:80'
+    #   - '443:443'
+    volumes:
+      - './data/mediawiki_data:/bitnami'
+    depends_on:
+      - mariadb
+
+# Uncommend the below lines if you want your volumes to be controlled by docker instead of persisting as mounted volumes.
+# volumes:
+#   mariadb_data:
+#     driver: local
+#   mediawiki_data:
+#     driver: local

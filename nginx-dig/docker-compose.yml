@@ -1,0 +1,14 @@
+version: "3.2"
+services:
+  # server1:
+  #   image: httpd:2.4
+  # server2:
+  #   image: httpd:2.4
+  proxy:
+    image: nginx
+    volumes:
+      - ./data/proxy_data/etc/nginx/conf.d:/etc/nginx/conf.d
+      - ./data/proxy_data/var/log/nginx:/var/log/nginx
+      - ./data/proxy_data/etc/nginx/certs:/etc/nginx/certs
+    ports:
+    - "80:80" 
