@@ -1,44 +1,33 @@
-version: '3.2'
-services:
-  mariadb:
-    image: 'bitnami/mariadb:latest'
-    environment:
-      # - ALLOW_EMPTY_PASSWORD=yes
-      - MARIADB_USER=bn_mediawiki
-      - MARIADB_DATABASE=bitnami_mediawiki
-      - MARIADB_ROOT_PASSWORD=your_mariadb_root_password
-      - MARIADB_PASSWORD=your_database_password
-    volumes:
-      - './data/mariadb_data:/bitnami'
-  mediawiki:
-    image: 'bitnami/mediawiki:latest'
-    environment:
-      # - ALLOW_EMPTY_PASSWORD=yes
-      - MARIADB_HOST=mariadb
-      - MARIADB_PORT_NUMBER=3306
-      - MEDIAWIKI_DATABASE_USER=bn_mediawiki
-      - MEDIAWIKI_DATABASE_NAME=bitnami_mediawiki
-      - MEDIAWIKI_WIKI_NAME=Bitnami MediaWiki
-      - MEDIAWIKI_USERNAME=user
-      - MEDIAWIKI_PASSWORD=bitnami1
-      - MEDIAWIKI_EMAIL=user@example.com
-      - MEDIAWIKI_DATABASE_PASSWORD=your_database_password
-      - SMTP_HOST=ssl://smtp.gmail.com
-      - SMTP_HOST_ID=mydomain.com
-      - SMTP_PORT=465
-      - SMTP_USER=your_email@gmail.com
-      - SMTP_PASSWORD=your_password
-    # ports: #comment this section out when using with nginx-docker-proxy
-    #   - '80:80'
-    #   - '443:443'
-    volumes:
-      - './data/mediawiki_data:/bitnami'
-    depends_on:
-      - mariadb
+# MediaWiki with MariaDB
+#
+# Access via "http://localhost:8080"
+#   (or "http://$(docker-machine ip):8080" if using docker-machine)
 
-# Uncommend the below lines if you want your volumes to be controlled by docker instead of persisting as mounted volumes.
+version: '3'
+services:
+  mediawiki:
+    # image: mediawiki
+    build: ./mediawiki-dig
+    restart: always
+    ports:
+      - 8080:80
+    links:
+      - database
+    volumes:
+      - ./image-data/:/var/www/html/images
+      # After initial setup, download LocalSettings.php to the same directory as
+      # this yaml and uncomment the following line and use compose to restart
+      # the mediawiki service
+      - ./LocalSettings.php:/var/www/html/LocalSettings.php
+      - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
+  database:
+    image: mariadb
+    restart: always
+    environment:
+      # @see https://phabricator.wikimedia.org/source/mediawiki/browse/master/includes/DefaultSettings.php
+      MYSQL_DATABASE: my_wiki
+      MYSQL_USER: wikiuser
+      MYSQL_PASSWORD: example
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
 # volumes:
-#   mariadb_data:
-#     driver: local
-#   mediawiki_data:
-#     driver: local
+#   image-data:
