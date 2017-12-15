@@ -1,0 +1,31 @@
+services:
+  # database:
+  #   environment:
+  #     MYSQL_DATABASE: my_wiki
+  #     MYSQL_PASSWORD: example
+  #     MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+  #     MYSQL_USER: wikiuser
+  #   image: mariadb
+  #   volumes:
+  #   - ./data/database:/var/lib/mysql
+  # mediawiki:
+  #   image: fredeerock/mediawiki
+  #   ports:
+  #   - 8080:80
+  #   volumes:
+  #   - ./data/000-default.conf:/etc/apache2/sites-available/000-default.conf
+  #   - ./data/LocalSettings.php:/var/www/html/LocalSettings.php
+  #   - ./data/image-data:/var/www/html/images
+  proxy:
+    image: nginx
+    ports:
+    - 80:80
+    volumes:
+    - ./data/proxy/conf.d:/etc/nginx/conf.d
+    - ./data/proxy/log:/var/log/nginx
+  server1:
+    image: httpd:2.4
+  server2:
+    image: httpd:2.4
+version: '3.0'
+

@@ -1,8 +1,0 @@
-.DS_Store
-access.log
-error.log
-.vscode
-data/*
-!data/mediawiki_data/mediawiki/LocalSettings.php
-!data/proxy_data
-.env
