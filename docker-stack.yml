@@ -10,6 +10,7 @@ services:
     - ./data/database:/var/lib/mysql
   mediawiki:
     image: fredeerock/mediawiki
+    # Comment volumes out when installing. When configured place the LocalSettings.php file here and uncomment. 
     volumes:
     - ./data/mediawiki/LocalSettings.php:/var/www/html/wiki/LocalSettings.php
   proxy:
